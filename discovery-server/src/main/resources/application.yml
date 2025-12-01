@@ -1,0 +1,14 @@
+server:
+  port: 8761  # Le serveur Eureka écoute sur le port 8761
+
+spring:
+  application:
+    name: discovery-server  # Nom de l'application dans l'écosystème Spring Cloud
+
+eureka:
+  client:
+    register-with-eureka: false  # Le serveur Eureka ne doit PAS s'enregistrer lui-même
+    fetch-registry: false        # Il ne récupère pas non plus le registre des autres services
+
+  server:
+    eviction-interval-timer-in-ms: 60000  # Intervalle de nettoyage des instances expirées (60s)
