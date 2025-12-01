@@ -16,8 +16,13 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String flightNumber; // 🔹 Nouveau champ
+
+    @Column(nullable = false)
     private String departure;
 
+    @Column(nullable = false)
     private String arrival;
 
     private LocalDateTime departureTime;
@@ -28,4 +33,3 @@ public class Flight {
 
     private int seatsAvailable;
 }
-

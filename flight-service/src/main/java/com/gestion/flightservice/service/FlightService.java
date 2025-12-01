@@ -1,7 +1,6 @@
 package com.gestion.flightservice.service;
 
 import com.gestion.flightservice.DTO.FlightDTO;
-
 import java.util.List;
 
 public interface FlightService {

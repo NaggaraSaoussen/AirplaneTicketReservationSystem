@@ -1,6 +1,5 @@
 package com.gestion.flightservice.Mapper;
 
-
 import com.gestion.flightservice.DTO.FlightDTO;
 import com.gestion.flightservice.entity.Flight;
 import org.springframework.stereotype.Component;
@@ -9,20 +8,24 @@ import org.springframework.stereotype.Component;
 public class FlightMapper {
 
     public FlightDTO toDTO(Flight f) {
-        FlightDTO dto = new FlightDTO();
-        dto.setId(f.getId());
-        dto.setDeparture(f.getDeparture());
-        dto.setArrival(f.getArrival());
-        dto.setDepartureTime(f.getDepartureTime());
-        dto.setArrivalTime(f.getArrivalTime());
-        dto.setPrice(f.getPrice());
-        dto.setSeatsAvailable(f.getSeatsAvailable());
-        return dto;
+        if (f == null) return null;
+        return FlightDTO.builder()
+                .id(f.getId())
+                .flightNumber(f.getFlightNumber())
+                .departure(f.getDeparture())
+                .arrival(f.getArrival())
+                .departureTime(f.getDepartureTime())
+                .arrivalTime(f.getArrivalTime())
+                .price(f.getPrice())
+                .seatsAvailable(f.getSeatsAvailable())
+                .build();
     }
 
     public Flight toEntity(FlightDTO dto) {
+        if (dto == null) return null;
         return Flight.builder()
                 .id(dto.getId())
+                .flightNumber(dto.getFlightNumber())
                 .departure(dto.getDeparture())
                 .arrival(dto.getArrival())
                 .departureTime(dto.getDepartureTime())
@@ -32,4 +35,3 @@ public class FlightMapper {
                 .build();
     }
 }
-

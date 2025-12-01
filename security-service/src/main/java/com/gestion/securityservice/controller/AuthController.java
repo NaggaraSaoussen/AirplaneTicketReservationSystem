@@ -1,7 +1,6 @@
 package com.gestion.securityservice.controller;
 
 import com.gestion.securityservice.DTO.AuthRequest;
-import com.gestion.securityservice.DTO.JwtResponse;
 import com.gestion.securityservice.config.JwtUtils;
 import com.gestion.securityservice.entity.AppUser;
 import com.gestion.securityservice.entity.Role;
@@ -95,6 +94,27 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyToken(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Token missing");
+        }
+
+        String token = authHeader.substring(7);
+
+        try {
+            String email = jwtUtils.extractUsername(token);
+            AppUser user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Map<String, Object> response = new HashMap<>();
+            response.put("email", user.getEmail());
+            response.put("role", user.getRole().name());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid token");
+        }
+    }
+
 
 
 
