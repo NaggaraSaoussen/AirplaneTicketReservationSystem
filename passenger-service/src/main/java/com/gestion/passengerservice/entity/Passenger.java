@@ -1,11 +1,7 @@
 package com.gestion.passengerservice.entity;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -18,9 +14,13 @@ public class Passenger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;        // prénom
-    private String lastName;         // nom
+    private String firstName;
+    private String lastName;
     private String email;
-    private String passportNumber;   // numéro de passeport
-    private LocalDate birthDate;     // date de naissance
+
+    private String passportNumber;
+    private String dateOfBirth;
+    private String nationality;
+
+    private Long userId; // AppUser ID
 }

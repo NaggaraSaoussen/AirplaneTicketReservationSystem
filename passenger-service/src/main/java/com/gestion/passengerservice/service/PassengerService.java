@@ -6,9 +6,14 @@ import java.util.List;
 
 public interface PassengerService {
 
-    List<PassengerDTO> getAll();
-    PassengerDTO getById(Long id);
-    PassengerDTO create(PassengerDTO dto);
-    PassengerDTO update(Long id, PassengerDTO dto);
-    void delete(Long id);
+
+    PassengerDTO createPassenger(PassengerDTO dto);
+
+    PassengerDTO updatePassenger(Long id, PassengerDTO dto);
+
+    PassengerDTO getPassenger(Long id);
+
+    List<PassengerDTO> getPassengersByUser(Long userId);
+
+    void deletePassenger(Long id);
 }

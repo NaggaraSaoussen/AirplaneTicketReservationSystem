@@ -22,9 +22,9 @@ public class JwtUtils {
     private long expiration;
 
     private Key getSigningKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(secret.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
+
 
 
     public String generateToken(String username, String role) {

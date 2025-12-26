@@ -18,7 +18,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-
+jwt:
+  secret: "u3R0bG9uZ2tleWF0bGVhcfnejbsdKRISA8µFHAB=******?loitYkw="
+  expiration: 3600000
 eureka:
   client:
     service-url:

@@ -11,5 +11,9 @@ public class PassengerDTO {
     private String lastName;
     private String email;
     private String passportNumber;
+    private String dateOfBirth;
+    private String nationality;
+    private Long userId; // ID du AppUser qui a créé / réservé
+
 
 }
