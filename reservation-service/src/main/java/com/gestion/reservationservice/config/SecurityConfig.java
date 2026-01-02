@@ -1,4 +1,4 @@
-package com.gestion.flightservice.config;
+package com.gestion.reservationservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,17 +25,13 @@ public class SecurityConfig {
                 .formLogin(f -> f.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ Autoriser la réservation à USER + ADMIN
-                        .requestMatchers(HttpMethod.PUT, "/api/flights/*/reserve").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/flights/*/release").hasAnyRole("USER","ADMIN")
 
-                        // ✅ Lecture pour tous les rôles
-                        .requestMatchers(HttpMethod.GET, "/api/flights/**").hasAnyRole("USER", "ADMIN")
+                        // ✅ RESERVATION endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/reservations/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT,  "/api/reservations/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,  "/api/reservations/**").hasAnyRole("USER", "ADMIN")
 
-                        // ✅ ADMIN pour le reste
-                        .requestMatchers(HttpMethod.POST, "/api/flights/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/flights/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/flights/**").hasRole("ADMIN")
+                        // le reste
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

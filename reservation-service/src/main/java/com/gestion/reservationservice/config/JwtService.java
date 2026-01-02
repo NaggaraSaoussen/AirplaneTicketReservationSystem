@@ -1,5 +1,6 @@
-package com.gestion.flightservice.config;
+package com.gestion.reservationservice.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -7,24 +8,28 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
-    private final String securityServiceUrl = "http://localhost:8084/auth/verify";
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    // ✅ ton endpoint réel : /auth/verify
+    private final String VERIFY_URL = "http://localhost:8084/auth/verify";
 
     public Map<String, Object> verifyToken(String token) {
-        RestTemplate restTemplate = new RestTemplate();
+
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
+        headers.setBearerAuth(token); // => "Authorization: Bearer <token>"
+
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Map> response = restTemplate.exchange(
-                securityServiceUrl,
+                VERIFY_URL,
                 HttpMethod.GET,
                 entity,
                 Map.class
         );
 
-        System.out.println("VERIFY RESPONSE: " + response.getBody());
         return response.getBody();
     }
 }

@@ -1,4 +1,4 @@
-package com.gestion.flightservice.config;
+package com.gestion.notificationservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,79 +15,48 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 🔐 JwtFilter
- *
- * Ce filtre est exécuté pour chaque requête HTTP entrante (OncePerRequestFilter).
- * Son rôle est de :
- *  - récupérer le token JWT depuis le header Authorization
- *  - vérifier ce token en appelant le security-service
- *  - extraire les informations de l'utilisateur (email, rôle)
- *  - créer l'objet d'authentification Spring Security
- *  - stocker l'authentification dans le SecurityContext
- */
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    // Service responsable de la validation du token JWT
-    // (appel au microservice security-service)
-    private final JwtService jwtService;
+    private final JwtService jwtService; // ✅ ici
 
-    /**
-     * Méthode appelée automatiquement pour chaque requête HTTP
-     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // Récupération du header Authorization
         String authHeader = request.getHeader("Authorization");
         System.out.println("==> Authorization Header: " + authHeader);
 
-        // Vérification que le header existe et commence par "Bearer "
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-
-            // Extraction du token JWT (sans le mot "Bearer ")
             String token = authHeader.substring(7);
 
             try {
-                // Appel au security-service pour vérifier la validité du token
-                // et récupérer les informations de l'utilisateur
+                // ✅ on appelle security-service
                 Map<String, Object> userData = jwtService.verifyToken(token);
 
-                // Récupération des données utilisateur depuis le token
                 String email = (String) userData.get("email");
                 String role = (String) userData.get("role");
 
-                // Création de l'objet d'authentification Spring Security
-                // avec l'email comme principal et le rôle comme autorité
                 var authToken = new UsernamePasswordAuthenticationToken(
                         email,
                         null,
                         List.of(new SimpleGrantedAuthority("ROLE_" + role))
                 );
 
-                // Stockage de l'utilisateur authentifié dans le SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
             } catch (Exception e) {
-                // En cas de token invalide ou erreur de vérification
                 e.printStackTrace();
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
         }
 
-        // Continuer la chaîne de filtres
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * Méthode permettant d'exclure certaines routes du filtrage JWT
-     * Ici, on autorise l'accès libre à Swagger (documentation API)
-     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();

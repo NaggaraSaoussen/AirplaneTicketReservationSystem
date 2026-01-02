@@ -2,8 +2,7 @@ package com.gestion.reservationservice.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,10 +15,13 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long passengerId;   // ID du passager dans passenger-service
-    private Long flightId;      // ID du vol dans flight-service
+    private Long flightId;
+    private String email;
 
-    private LocalDate reservationDate;
+    private int seats;
 
-    private int seats;          // nombre de sièges réservés
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
+
+    private LocalDateTime createdAt;
 }

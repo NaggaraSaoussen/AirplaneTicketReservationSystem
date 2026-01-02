@@ -1,12 +1,11 @@
 package com.gestion.reservationservice.services;
 
-import com.gestion.reservationservice.entity.Reservation;
-
+import com.gestion.reservationservice.dto.ReservationDTO;
 import java.util.List;
 
 public interface ReservationService {
-    Reservation createReservation(Long passengerId, Long flightId, int seats);
-    List<Reservation> getAll();
-    Reservation getById(Long id);
-}
+    ReservationDTO create(Long flightId, int seats, String email, String bearerToken);
+    List<ReservationDTO> myReservations(String email);
 
+    ReservationDTO cancel(Long reservationId, String email, String bearerToken);
+}

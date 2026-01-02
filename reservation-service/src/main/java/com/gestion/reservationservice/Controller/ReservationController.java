@@ -1,35 +1,55 @@
 package com.gestion.reservationservice.Controller;
 
-import com.gestion.reservationservice.entity.Reservation;
+import com.gestion.reservationservice.dto.ReservationDTO;
 import com.gestion.reservationservice.services.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/reservations")
 @RequiredArgsConstructor
+@RequestMapping("/api/reservations")
 public class ReservationController {
 
     private final ReservationService service;
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping
-    public Reservation create(
-            @RequestParam Long passengerId,
+    public ResponseEntity<?> create(
             @RequestParam Long flightId,
-            @RequestParam int seats) {
-        return service.createReservation(passengerId, flightId, seats);
+            @RequestParam int seats,
+            Authentication auth,
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = auth.getName();
+        ReservationDTO created = service.create(flightId, seats, email, bearerToken);
+        return ResponseEntity.ok(Map.of(
+                "message", "Reservation created",
+                "reservation", created,
+                "notificationSent", true
+        ));
     }
 
-    @GetMapping
-    public List<Reservation> getAll() {
-        return service.getAll();
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping("/me")
+    public List<ReservationDTO> myReservations(Authentication auth) {
+        return service.myReservations(auth.getName());
     }
 
-    @GetMapping("/{id}")
-    public Reservation getById(@PathVariable Long id) {
-        return service.getById(id);
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<?> cancel(
+            @PathVariable Long id,
+            Authentication auth,
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = auth.getName();
+        ReservationDTO cancelled = service.cancel(id, email, bearerToken);
+        return ResponseEntity.ok(Map.of("message", "Reservation cancelled", "reservation", cancelled));
     }
 }
-

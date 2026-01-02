@@ -1,4 +1,4 @@
-package com.gestion.flightservice.config;
+package com.gestion.notificationservice.config;
 
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
